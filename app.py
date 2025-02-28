@@ -78,6 +78,11 @@ def identify_view():
   return jsonify(message='Invalid user'), 403
 
 # Task 3.4 Here
+@app.route('/logout', methods=['GET'])
+def logout():
+  response = jsonify(message='Logged out')
+  unset_jwt_cookies(response)
+  return response
 
 # Task 4 Here
 
@@ -104,3 +109,4 @@ def get_stats_view():
 
 if __name__ == "__main__":
   app.run(host='0.0.0.0', debug=True)
+  app.run(host='0.0.0.0', port=81)
