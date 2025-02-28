@@ -133,6 +133,20 @@ def get_todo_view(id):
   return jsonify(todo.get_json()), 200
 
 # Task 5.4 Here PUT /todos/id
+@app.route('/todos/<int:id>', methods=['PUT'])
+@login_required(RegularUser)
+def edit_todo_view(id):
+  data = request.json
+  user = RegularUser.query.filter_by(username=get_jwt_identity()).first()
+
+  todo = Todo.query.get(id)
+
+  # must check if todo belongs to the authenticated user
+  if not todo or todo.user.username != get_jwt_identity():
+    return jsonify(error="Bad ID or unauthorized"), 401
+
+  user.update_todo(id, data['text'])
+  return jsonify(message=f"todo updated to '{data['text']}'!"), 200
 
 # Task 5.5 Here DELETE /todos/id
 
