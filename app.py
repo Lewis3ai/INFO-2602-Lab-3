@@ -121,6 +121,16 @@ def get_todos_view():
   return jsonify(todo_json), 200
 
 # Task 5.3 Here GET /todos/id
+@app.route('/todos/<int:id>', methods=['GET'])
+@jwt_required()
+def get_todo_view(id):
+  todo = Todo.query.get(id)
+
+  # must check if todo belongs to the authenticated user
+  if not todo or todo.user.username != get_jwt_identity():
+    return jsonify(error="Bad ID or unauthorized"), 401
+
+  return jsonify(todo.get_json()), 200
 
 # Task 5.4 Here PUT /todos/id
 
