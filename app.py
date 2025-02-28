@@ -111,6 +111,14 @@ def create_todo_view():
   return jsonify(message=f'todo {new_todo.id} created!'), 201
 
 # Task 5.2 Here GET /todos
+@app.route('/todos', methods=['GET'])
+@jwt_required()
+def get_todos_view():
+  # get the user object of the authenticated user
+  user = RegularUser.query.filter_by(username=get_jwt_identity()).first()
+  # converts todo objects to list of todo dictionaries
+  todo_json = [ todo.get_json() for todo in user.todos ]
+  return jsonify(todo_json), 200
 
 # Task 5.3 Here GET /todos/id
 
